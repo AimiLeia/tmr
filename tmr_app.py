@@ -3,25 +3,18 @@ import pandas as pd
 import altair as alt
 import folium
 import gpxpy
-import base64
 from data import load_data
+import base64
 
-# =========================
-# ⚙️ CONFIG
-# =========================
-st.set_page_config(
-    page_title="Monte Rosa Tour",
-    page_icon="🏔️",
-    layout="wide"
-)
+def get_base64(img_path):
+    with open(img_path, "rb") as f:
+        return base64.b64encode(f.read()).decode()
 
-CHF_TO_EUR = 1.04
 
-# =========================
-# 📦 LOAD DATA
-# =========================
+CHF_TO_EUR = 1.04  # approx
+st.set_page_config(layout="wide")
+
 df = load_data()
-
 def convert_to_eur(row):
     if row["currency"] == "CHF":
         return row["cost"] * CHF_TO_EUR
@@ -30,12 +23,8 @@ def convert_to_eur(row):
 df["cost_eur"] = df.apply(convert_to_eur, axis=1)
 total_eur = df["cost_eur"].sum()
 
-# =========================
-# 🖼️ HERO IMAGE
-# =========================
-def get_base64(img_path):
-    with open(img_path, "rb") as f:
-        return base64.b64encode(f.read()).decode()
+# ========================
+
 
 img_base64 = get_base64("mat.jpg")
 
@@ -45,69 +34,76 @@ st.markdown(f"""
     background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
     url("data:image/jpg;base64,{img_base64}");
     background-size: cover;
-    background-position: 50% 10%;
+    background-position: top;
     padding: 100px;
     border-radius: 15px;
     color: white;
     text-align: center;
-    margin-bottom: 20px;
 }}
 
+/* 📱 MOBILE */
 @media (max-width: 768px) {{
     .hero {{
+        background-position: top center;
         padding: 60px;
-        background-position: 50% 5%;
     }}
 }}
 </style>
-
-<div class="hero">
-    <h1>🏔️ Monte Rosa Tour</h1>
-    <p>Adventure awaits</p>
-</div>
 """, unsafe_allow_html=True)
 
 # =========================
-# 🧭 DAY NAVIGATION (MOBILE FRIENDLY)
+# 🌐 GLOBAL LINKS
 # =========================
-if "day" not in st.session_state:
-    st.session_state.day = 1
-
-col1, col2, col3 = st.columns([1,2,1])
-
-if col1.button("⬅️", use_container_width=True):
-    st.session_state.day = max(1, st.session_state.day - 1)
-
-col2.markdown(f"### Day {st.session_state.day}")
-
-if col3.button("➡️", use_container_width=True):
-    st.session_state.day = min(df["day"].max(), st.session_state.day + 1)
-
-day = st.session_state.day
-row = df[df["day"] == day].iloc[0]
+wikiloc_url = "https://el.wikiloc.com/oreibasia-diadromes/tmr-reduced-6-days-itinerary-254794250?h=xpqqvvg3pk&wa=sd&utm_campaign=badge&utm_source=unknown&utm_medium=unknown"
 
 # =========================
-# 🔀 VIEW SELECTOR
+# 📌 SIDEBAR
 # =========================
-view = st.radio(
-    "View",
-    ["🏔️ Plan", "🚆 Transport"],
-    horizontal=True
-)
+st.sidebar.title("🏔️ Monte Rosa Tour")
+
+day = st.sidebar.selectbox("Select Day", df["day"])
+
+progress = day / df["day"].max()
+st.sidebar.progress(progress)
+
+st.sidebar.markdown("---")
+st.sidebar.markdown("### 🗺️ Route")
+st.sidebar.markdown(f"[🔗 Wikiloc Trail]({wikiloc_url})")
+
+st.sidebar.markdown("### 🚀 Quick Links")
+st.sidebar.markdown("[🚌 Bus Timetable](https://www.comazzibus.com/)")
+st.sidebar.markdown("[🚆 Trenitalia](https://www.trenitalia.com/)")
+st.sidebar.markdown("[🚆 SBB](https://www.sbb.ch/)")
+
+st.sidebar.markdown("---")
+st.sidebar.markdown("### 🎯 Activities")
+
+st.sidebar.markdown("""
+- 🏔️ Zermatt Hikes  
+[Explore](https://www.earthtrekkers.com/best-hikes-in-zermatt/)
+- 🏔️ Brig Activities  
+[Explore](https://www.myswitzerland.com/en/destinations/eggishorn-viewpoint-look-out-over-the-great-aletsch-glacier/)
+""")
 
 # =========================
-# 🏔️ DAILY PLAN
+# 📑 TABS
 # =========================
-if view == "🏔️ Plan":
+tab1, tab2 = st.tabs(["🏔️ Daily Plan", "🚆 Transport Info"])
 
-    st.title(f"{row['from']} → {row['to']}")
+# =========================
+# 🏔️ TAB 1 — DAILY PLAN
+# =========================
+with tab1:
+
+    row = df[df["day"] == day].iloc[0]
+
+    st.title(f"Day {row['day']}: {row['from']} → {row['to']}")
     st.caption(row["date"])
 
-    # Quick cost info
-    st.info(f"💰 ~{int(total_eur/6)}€ per person")
+    st.markdown(f"[🗺️ Open Full Route (Wikiloc)]({wikiloc_url})")
 
-    # --- Metrics (mobile optimized) ---
-    col1, col2 = st.columns(2)
+    # --- Metrics ---
+    col1, col2, col3 = st.columns(3)
 
     col1.metric(
         "Distance",
@@ -119,33 +115,48 @@ if view == "🏔️ Plan":
         f"{row['elevation_up']} m" if pd.notna(row['elevation_up']) else "-"
     )
 
-    st.metric(
+    col3.metric(
         "Time",
         f"{row['time_h']} h" if pd.notna(row['time_h']) else "-"
     )
 
-    st.markdown("---")
+    
 
     # --- Accommodation ---
     st.subheader("🏠 Accommodation")
 
     st.write(f"**{row['stay']}**")
-    st.write(f"💰 {row['cost']} {row['currency']}")
+    st.write(f"💰 Cost: {row['cost']} {row['currency']}")
 
     if row.get("link"):
-        st.markdown(f"[🔗 Open booking]({row['link']})")
+        st.markdown(f"[🔗 Open booking / website]({row['link']})")
+        st.caption("👉 Opens in browser")
 
     # --- Notes ---
     if row["notes"]:
         st.subheader("⚠️ Notes")
         st.markdown(row["notes"])
 
+    # =========================
+    # 📊 SUMMARY
+    # =========================
     st.markdown("---")
+    st.subheader("📊 Trip Summary")
+
+    col1, col2, col3 = st.columns(3)
+
+    total_km = df["distance_km"].sum(skipna=True)
+    total_up = df["elevation_up"].sum(skipna=True)
+    total_cost = df["cost"].sum()
+
+    col1.metric("Total Distance", f"{round(total_km,1)} km")
+    col2.metric("Total Elevation ↑", f"{int(total_up)} m")
+    st.metric("Total Cost per person (EUR)", f"{int(total_eur/6)} €")
 
     # =========================
     # 📈 ELEVATION CHART
     # =========================
-    st.subheader("📈 Elevation")
+    st.subheader("📈 Elevation Gain & Loss per Day")
 
     df["elevation_down_neg"] = -df["elevation_down"].fillna(0)
 
@@ -157,74 +168,97 @@ if view == "🏔️ Plan":
     )
 
     chart_df["type"] = chart_df["type"].replace({
-        "elevation_up": "Up",
-        "elevation_down_neg": "Down"
+        "elevation_up": "Elevation Up",
+        "elevation_down_neg": "Elevation Down"
     })
 
     chart = alt.Chart(chart_df).mark_bar().encode(
-        x=alt.X("day:O"),
-        y=alt.Y("meters:Q"),
-        color="type:N"
+        x=alt.X("day:O", title="Day"),
+        y=alt.Y("meters:Q", title="Meters"),
+        color=alt.Color("type:N", legend=alt.Legend(title="Type")),
+        tooltip=["day", "type", "meters"]
     )
 
     st.altair_chart(chart, use_container_width=True)
 
+    # =========================
+    # 🗺️ ROUTE MAP (GPX)
+    # =========================
     st.markdown("---")
+    st.subheader("🗺️ Route Map")
 
-    # =========================
-    # 🗺️ MAP
-    # =========================
-    st.subheader("🗺️ Route")
+    # Load GPX
+    with open("tmr.gpx", "r") as f:
+        gpx = gpxpy.parse(f)
 
-    try:
-        with open("tmr.gpx", "r") as f:
-            gpx = gpxpy.parse(f)
+    # Extract points
+    points = [
+        (p.latitude, p.longitude)
+        for track in gpx.tracks
+        for segment in track.segments
+        for p in segment.points
+    ]
 
-        points = [
-            (p.latitude, p.longitude)
-            for track in gpx.tracks
-            for segment in track.segments
-            for p in segment.points
-        ]
+    # Create map
+    m = folium.Map(location=points[0], zoom_start=10)
 
-        m = folium.Map(location=points[0], zoom_start=10)
-        folium.PolyLine(points, weight=4).add_to(m)
-
-        folium.Marker(points[0], tooltip="Start").add_to(m)
-        folium.Marker(points[-1], tooltip="End").add_to(m)
-
-        st.components.v1.html(m._repr_html_(), height=400)
-
-    except:
-        st.warning("Map not available")
+    # Draw route
+    folium.PolyLine(points, color="blue", weight=4).add_to(m)
+    folium.Marker(points[0], tooltip="Start").add_to(m)
+    folium.Marker(points[-1], tooltip="End").add_to(m)
+    # Show map in Streamlit
+    st.components.v1.html(m._repr_html_(), height=500)
 
 # =========================
-# 🚆 TRANSPORT
+# 🚆 TAB 2 — TRANSPORT
 # =========================
-else:
+with tab2:
 
-    st.title("🚆 Transport")
+    st.title("🚆 Transport & Logistics")
 
+    # --- Flights ---
     with st.expander("✈️ Flights"):
         st.markdown("""
-        Athens → Milan  
-        Milan → Athens
+        **Athens → Milan**  
+        (add flight details)
+
+        **Return: Milan → Athens**  
+        (add return flight)
         """)
 
-    with st.expander("🚆 Train"):
+    # --- Train Italy ---
+    with st.expander("🚆 Train: Milano → Domodossola"):
         st.markdown("""
-        Milano → Domodossola  
-        👉 https://www.trenitalia.com/
+        - Departure: Milano Centrale  
+        - Duration: ~1h30  
+
+        👉 [Check Trenitalia](https://www.trenitalia.com/)
         """)
 
-    with st.expander("🚌 Bus"):
+    # --- Bus ---
+    with st.expander("🚌 Bus: Domodossola → Macugnaga"):
         st.markdown("""
-        Domodossola → Macugnaga  
-        👉 https://www.comazzibus.com/
+        - Last departure: 17:30  
+
+        👉 [Bus timetable](https://www.comazzibus.com/)
         """)
 
-    with st.expander("🚆 Switzerland"):
+    # --- Switzerland ---
+    with st.expander("🚆 Swiss Transport (Zermatt / Brig)"):
         st.markdown("""
-        Zermatt → Brig → Milan  
-        👉 https://www.sbb.ch/
+        - Zermatt → Brig (train)  
+        - Brig → Milan (train)  
+
+        👉 [SBB Timetable](https://www.sbb.ch/)
         """)
+
+    # --- Notes ---
+    st.markdown("---")
+    st.subheader("🧠 Useful Tips")
+
+    st.markdown("""
+    - Arrive early for connections  
+    - Swiss trains are very punctual  
+    - Check last bus times carefully  
+    - Save tickets offline  
+    """)
