@@ -28,28 +28,33 @@ total_eur = df["cost_eur"].sum()
 
 img_base64 = get_base64("mat.jpg")
 
-st.markdown(
-    f"""
-    <style>
-    .hero {{
-        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
-        url("data:image/jpg;base64,{img_base64}");
-        background-size: cover;
-        background-position:  50% 10%;
-        padding: 80px;
-        border-radius: 15px;
-        color: white;
-        text-align: center;
-    }}
-    </style>
+st.markdown(f"""
+<style>
+.hero {{
+    background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+    url("data:image/jpg;base64,{img_base64}");
+    background-size: cover;
+    background-position: 50% 10%;
+    padding: 100px;
+    border-radius: 15px;
+    color: white;
+    text-align: center;
+    margin-bottom: 20px;
+}}
 
-    <div class="hero">
-        <h1>Monte Rosa Tour</h1>
-        <p>Adventure awaits 🏔️</p>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+@media (max-width: 768px) {{
+    .hero {{
+        padding: 60px;
+        background-position: 50% 5%;
+    }}
+}}
+</style>
+
+<div class="hero">
+    <h1>🏔️ Monte Rosa Tour</h1>
+    <p>Adventure awaits</p>
+</div>
+""", unsafe_allow_html=True)
 
 # =========================
 # 🌐 GLOBAL LINKS
@@ -207,7 +212,7 @@ with tab1:
     folium.Marker(points[0], tooltip="Start").add_to(m)
     folium.Marker(points[-1], tooltip="End").add_to(m)
     # Show map in Streamlit
-    st.components.v1.html(m._repr_html_(), height=500)
+    st.components.v1.html(m._repr_html_(), height=400)
 
 # =========================
 # 🚆 TAB 2 — TRANSPORT
