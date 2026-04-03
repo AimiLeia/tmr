@@ -28,28 +28,28 @@ total_eur = df["cost_eur"].sum()
 
 img_base64 = get_base64("mat.jpg")
 
-st.markdown(f"""
-<style>
-.hero {{
-    background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
-    url("data:image/jpg;base64,{img_base64}");
-    background-size: cover;
-    background-position: top;
-    padding: 100px;
-    border-radius: 15px;
-    color: white;
-    text-align: center;
-}}
-
-/* 📱 MOBILE */
-@media (max-width: 768px) {{
+st.markdown(
+    f"""
+    <style>
     .hero {{
-        background-position: top center;
-        padding: 60px;
+        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+        url("data:image/jpg;base64,{img_base64}");
+        background-size: cover;
+        background-position:  50% 10%;
+        padding: 80px;
+        border-radius: 15px;
+        color: white;
+        text-align: center;
     }}
-}}
-</style>
-""", unsafe_allow_html=True)
+    </style>
+
+    <div class="hero">
+        <h1>Monte Rosa Tour</h1>
+        <p>Adventure awaits 🏔️</p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 # =========================
 # 🌐 GLOBAL LINKS
