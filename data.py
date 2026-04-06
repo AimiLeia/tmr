@@ -29,7 +29,7 @@ def load_data():
             "elevation_down": 10,
             "time_h": 4,
             "stay": "Rifugio Oberto Maroli (2780m)",
-            "cost": 80,
+            "cost": 80*6,
             "currency":"CHF",
             "link": "https://www.montemoropass.it",
             "notes": "Cable car may not work. Possible snow at 2900m."
@@ -77,7 +77,7 @@ def load_data():
             "elevation_down": 805,
             "time_h": 6.6,
             "stay": "Europahutte",
-            "cost": 95,
+            "cost": 95*6,
             "currency":"CHF",
             "link": "https://www.randa.ch/en/tourism/mountain-huts/europa-hut/",
             "notes": "Check trail conditions (Europaweg closures)."
@@ -109,7 +109,7 @@ def load_data():
             "elevation_down": 35,
             "time_h": 4.2,
             "stay": "Gandegghutte",
-            "cost": 103,
+            "cost": 103*6,
             "currency":"CHF",
             "link": "https://www.gandegg.ch/mountain-hut.html",
             "notes": ""
