@@ -10,11 +10,11 @@ def get_base64(img_path):
     with open(img_path, "rb") as f:
         return base64.b64encode(f.read()).decode()
 
+
 CHF_TO_EUR = 1.04  # approx
 st.set_page_config(layout="wide")
 
 df = load_data()
-
 def convert_to_eur(row):
     if row["currency"] == "CHF":
         return row["cost"] * CHF_TO_EUR
@@ -24,6 +24,8 @@ df["cost_eur"] = df.apply(convert_to_eur, axis=1)
 total_eur = df["cost_eur"].sum()
 
 # ========================
+
+
 img_base64 = get_base64("mat.jpg")
 
 st.markdown(f"""
@@ -64,10 +66,7 @@ wikiloc_url = "https://el.wikiloc.com/oreibasia-diadromes/tmr-reduced-6-days-iti
 # =========================
 st.sidebar.title("🏔️ Monte Rosa Tour")
 
-# Mobile-friendly day selection using buttons
-for d in df["day"].unique():
-    if st.sidebar.button(f"Day {d}"):
-        day = d
+day = st.sidebar.selectbox("Select Day", df["day"])
 
 progress = day / df["day"].max()
 st.sidebar.progress(progress)
@@ -77,20 +76,19 @@ st.sidebar.markdown("### 🗺️ Route")
 st.sidebar.markdown(f"[🔗 Wikiloc Trail]({wikiloc_url})")
 
 st.sidebar.markdown("### 🚀 Quick Links")
-with st.sidebar.expander("Quick Links:", expanded=True):
-    st.sidebar.markdown("[🚌 Bus Timetable](https://www.comazzibus.com/)")
-    st.sidebar.markdown("[🚆 Trenitalia](https://www.trenitalia.com/)")
-    st.sidebar.markdown("[🚆 SBB](https://www.sbb.ch/)")
+st.sidebar.markdown("[🚌 Bus Timetable](https://www.comazzibus.com/)")
+st.sidebar.markdown("[🚆 Trenitalia](https://www.trenitalia.com/)")
+st.sidebar.markdown("[🚆 SBB](https://www.sbb.ch/)")
 
 st.sidebar.markdown("---")
 st.sidebar.markdown("### 🎯 Activities")
-with st.sidebar.expander("Activities:", expanded=True):
-    st.sidebar.markdown("""
-    - 🏔️ Zermatt Hikes  
-    [Explore](https://www.earthtrekkers.com/best-hikes-in-zermatt/)
-    - 🏔️ Brig Activities  
-    [Explore](https://www.myswitzerland.com/en/destinations/eggishorn-viewpoint-look-out-over-the-great-aletsch-glacier/)
-    """)
+
+st.sidebar.markdown("""
+- 🏔️ Zermatt Hikes  
+[Explore](https://www.earthtrekkers.com/best-hikes-in-zermatt/)
+- 🏔️ Brig Activities  
+[Explore](https://www.myswitzerland.com/en/destinations/eggishorn-viewpoint-look-out-over-the-great-aletsch-glacier/)
+""")
 
 # =========================
 # 📑 TABS
@@ -101,7 +99,7 @@ tab1, tab2 = st.tabs(["🏔️ Daily Plan", "🚆 Transport Info"])
 # 🏔️ TAB 1 — DAILY PLAN
 # =========================
 with tab1:
-    
+
     row = df[df["day"] == day].iloc[0]
 
     st.title(f"Day {row['day']}: {row['from']} → {row['to']}")
@@ -110,15 +108,28 @@ with tab1:
     st.markdown(f"[🗺️ Open Full Route (Wikiloc)]({wikiloc_url})")
 
     # --- Metrics ---
-    metrics_display = st.expander("Metrics", True)
-    with metrics_display:
-        col1, col2, col3 = st.columns(1)  # Single column layout for mobile
-        col1.metric("Distance", f"{row['distance_km']} km" if pd.notna(row['distance_km']) else "-")
-        col1.metric("Elevation ↑", f"{row['elevation_up']} m" if pd.notna(row['elevation_up']) else "-")
-        col1.metric("Time", f"{row['time_h']} h" if pd.notna(row['time_h']) else "-")
+    col1, col2, col3 = st.columns(3)
+
+    col1.metric(
+        "Distance",
+        f"{row['distance_km']} km" if pd.notna(row['distance_km']) else "-"
+    )
+
+    col2.metric(
+        "Elevation ↑",
+        f"{row['elevation_up']} m" if pd.notna(row['elevation_up']) else "-"
+    )
+
+    col3.metric(
+        "Time",
+        f"{row['time_h']} h" if pd.notna(row['time_h']) else "-"
+    )
+
+    
 
     # --- Accommodation ---
     st.subheader("🏠 Accommodation")
+
     st.write(f"**{row['stay']}**")
     st.write(f"💰 Cost: {row['cost']} {row['currency']}")
 
@@ -137,11 +148,13 @@ with tab1:
     st.markdown("---")
     st.subheader("📊 Trip Summary")
 
+    col1, col2, col3 = st.columns(3)
+
     total_km = df["distance_km"].sum(skipna=True)
     total_up = df["elevation_up"].sum(skipna=True)
+    total_cost = df["cost"].sum()
 
-    col1, col2 = st.columns(2)
-    col1.metric("Total Distance", f"{round(total_km, 1)} km")
+    col1.metric("Total Distance", f"{round(total_km,1)} km")
     col2.metric("Total Elevation ↑", f"{int(total_up)} m")
     st.metric("Total Cost per person (EUR)", f"{int(total_eur/6)} €")
 
@@ -198,9 +211,8 @@ with tab1:
     folium.PolyLine(points, color="blue", weight=4).add_to(m)
     folium.Marker(points[0], tooltip="Start").add_to(m)
     folium.Marker(points[-1], tooltip="End").add_to(m)
-
     # Show map in Streamlit
-    st.components.v1.html(m._repr_html_(), height=300)  # Adjusted height for better mobile fit
+    st.components.v1.html(m._repr_html_(), height=400)
 
 # =========================
 # 🚆 TAB 2 — TRANSPORT
@@ -210,7 +222,7 @@ with tab2:
     st.title("🚆 Transport & Logistics")
 
     # --- Flights ---
-    with st.expander("✈️ Flights", expanded=True):
+    with st.expander("✈️ Flights"):
         st.markdown("""
         **Athens → Milan**  
         (add flight details)
@@ -220,7 +232,7 @@ with tab2:
         """)
 
     # --- Train Italy ---
-    with st.expander("🚆 Train: Milano → Domodossola", expanded=True):
+    with st.expander("🚆 Train: Milano → Domodossola"):
         st.markdown("""
         - Departure: Milano Centrale  
         - Duration: ~1h30  
@@ -229,7 +241,7 @@ with tab2:
         """)
 
     # --- Bus ---
-    with st.expander("🚌 Bus: Domodossola → Macugnaga", expanded=True):
+    with st.expander("🚌 Bus: Domodossola → Macugnaga"):
         st.markdown("""
         - Last departure: 17:30  
 
@@ -237,7 +249,7 @@ with tab2:
         """)
 
     # --- Switzerland ---
-    with st.expander("🚆 Swiss Transport (Zermatt / Brig)", expanded=True):
+    with st.expander("🚆 Swiss Transport (Zermatt / Brig)"):
         st.markdown("""
         - Zermatt → Brig (train)  
         - Brig → Milan (train)  
