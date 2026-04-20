@@ -230,10 +230,21 @@ with tab1:
     ]
 
     # Create map
-    m = folium.Map(location=points[0], zoom_start=10)
+    # m = folium.Map(location=points[0], zoom_start=10)
+
+    # # Draw route
+    # folium.PolyLine(points, color="blue", weight=4).add_to(m)
+    # folium.Marker(points[0], tooltip="Start").add_to(m)
+    # folium.Marker(points[-1], tooltip="End").add_to(m)
+    m = folium.Map()
 
     # Draw route
     folium.PolyLine(points, color="blue", weight=4).add_to(m)
+
+    # Fit map to bounds
+    m.fit_bounds(points)
+
+    # Markers
     folium.Marker(points[0], tooltip="Start").add_to(m)
     folium.Marker(points[-1], tooltip="End").add_to(m)
     # Show map in Streamlit
