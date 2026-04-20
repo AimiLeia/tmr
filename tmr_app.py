@@ -20,6 +20,9 @@ def convert_to_eur(row):
         return row["cost"] * CHF_TO_EUR
     return row["cost"]
 
+if "day" not in st.session_state:
+    st.session_state.day = int(df["day"].min())
+
 df["cost_eur"] = df.apply(convert_to_eur, axis=1)
 total_eur = df["cost_eur"].sum()
 
@@ -66,7 +69,14 @@ wikiloc_url = "https://el.wikiloc.com/oreibasia-diadromes/tmr-reduced-6-days-iti
 # =========================
 st.sidebar.title("🏔️ Monte Rosa Tour")
 
-day = st.sidebar.selectbox("Select Day", df["day"])
+# day = st.sidebar.selectbox("Select Day", df["day"])
+day = st.sidebar.selectbox(
+    "Select Day",
+    df["day"],
+    index=list(df["day"]).index(st.session_state.day)
+)
+
+st.session_state.day = day
 
 progress = day / df["day"].max()
 st.sidebar.progress(progress)
@@ -98,6 +108,19 @@ tab1, tab2 = st.tabs(["🏔️ Daily Plan", "🚆 Transport Info"])
 # =========================
 # 🏔️ TAB 1 — DAILY PLAN
 # =========================
+col_prev, col_mid, col_next = st.columns([1,2,1])
+
+with col_prev:
+    if st.button("⬅️ Previous", use_container_width=True):
+        if st.session_state.day > df["day"].min():
+            st.session_state.day -= 1
+
+with col_next:
+    if st.button("Next ➡️", use_container_width=True):
+        if st.session_state.day < df["day"].max():
+            st.session_state.day += 1
+
+day = st.session_state.day
 with tab1:
 
     row = df[df["day"] == day].iloc[0]
