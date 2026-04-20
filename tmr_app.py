@@ -31,14 +31,6 @@ total_eur = df["cost_eur"].sum()
 
 img_base64 = get_base64("mat.jpg")
 
-st.markdown("""
-<style>
-.stButton > button {
-    height: 3em;
-    font-size: 16px;
-}
-</style>
-""", unsafe_allow_html=True)
 
 st.markdown(f"""
 <style>
@@ -131,6 +123,20 @@ with col_next:
 
 day = st.session_state.day
 with tab1:
+    # 🔝 NAVIGATION FIRST (top of page)
+    col_prev, col_mid, col_next = st.columns([1,2,1])
+
+    with col_prev:
+        if st.button("⬅️ Previous", use_container_width=True):
+            if st.session_state.day > df["day"].min():
+                st.session_state.day -= 1
+
+    with col_next:
+        if st.button("Next ➡️", use_container_width=True):
+            if st.session_state.day < df["day"].max():
+                st.session_state.day += 1
+
+    day = st.session_state.day
 
     row = df[df["day"] == day].iloc[0]
 
