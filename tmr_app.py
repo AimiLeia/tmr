@@ -30,24 +30,7 @@ total_eur = df["cost_eur"].sum()
 
 
 img_base64 = get_base64("mat.jpg")
-st.markdown("""
-<style>
-.nav-buttons {
-    position: sticky;
-    top: 0;
-    background-color: white;
-    z-index: 999;
-    padding: 10px 0;
-}
-</style>
-""", unsafe_allow_html=True)
 
-st.markdown('<div class="nav-buttons">', unsafe_allow_html=True)
-
-col_prev, col_mid, col_next = st.columns([1,2,1])
-# buttons here...
-
-st.markdown('</div>', unsafe_allow_html=True)
 
 st.markdown(f"""
 <style>
