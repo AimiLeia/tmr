@@ -16,7 +16,8 @@ def load_data():
             "cost": 150,
             "currency":"EUR",
             "link": "https://secure.booking.com/confirmation.el.html?label=gen173nr-10CAEoggI46AdIM1gEaFyIAQGYATO4ARfIAQzYAQPoAQH4AQGIAgGoAgG4Asvv780GwAIB0gIkNWU3YzY5ZTEtMDhhOS00YTI5LWJkOTgtYjgyMWI5NGE0YTY32AIB4AIB&sid=8df3b9f6feab32d1b4c2fb0b72d0d9d8&aid=304142&auth_key=67YzRA5nnWrTky7n&source=mytrips",
-            "notes": "Reach Domodossola via train. Bus routes for next day transfer are  [here](https://www.comazzibus.com/wp/wp-content/uploads/2026/03/DOMODOSSOLA-MACUGNAGA-INVERNALE_def.pdf)."
+            "notes": "Reach Domodossola via train. Bus routes for next day transfer are  [here](https://www.comazzibus.com/wp/wp-content/uploads/2026/03/DOMODOSSOLA-MACUGNAGA-INVERNALE_def.pdf).",
+            "gpx_file": "gpx_files/tmr.gpx"
         },
         {
             "day": 2,
@@ -32,7 +33,8 @@ def load_data():
             "cost": 80*6,
             "currency":"CHF",
             "link": "https://www.montemoropass.it",
-            "notes": "Cable car may not work. Possible snow at 2900m."
+            "notes": "Cable car may not work. Possible snow at 2900m.",
+            "gpx_file": "gpx_files/day1.gpx"
         },
         {
             "day": 3,
@@ -48,7 +50,8 @@ def load_data():
             "cost": 408,
             "currency":"CHF",
             "link": "https://secure.booking.com/confirmation.el.html?label=gen173nr-10CAEoggI46AdIM1gEaFyIAQGYATO4ARfIAQzYAQPoAQH4AQGIAgGoAgG4Asvv780GwAIB0gIkNWU3YzY5ZTEtMDhhOS00YTI5LWJkOTgtYjgyMWI5NGE0YTY32AIB4AIB&sid=8df3b9f6feab32d1b4c2fb0b72d0d9d8&aid=304142&auth_key=3MU7mWahOzErz6dh&source=mytrips",
-            "notes": ""
+            "notes": "",
+            "gpx_file": "gpx_files/day2.gpx"
         },
         {
             "day": 4,
@@ -64,7 +67,8 @@ def load_data():
             "cost": 445,
             "currency":"CHF",
             "link": "https://secure.booking.com/confirmation.el.html?label=gen173nr-10CAEoggI46AdIM1gEaFyIAQGYATO4ARfIAQzYAQPoAQH4AQGIAgGoAgG4AvLAqM4GwAIB0gIkYjcwYjE3YzYtM2I3Ni00OTRmLTliMGUtZjNkYWVmZGExY2M32AIB4AIB&sid=8df3b9f6feab32d1b4c2fb0b72d0d9d8&aid=304142&auth_key=WXzB0XmRBSE66pUj&source=mytrips",
-            "notes": ""
+            "notes": "",
+            "gpx_file": "gpx_files/day3.gpx"
         },
         {
             "day": 5,
@@ -80,7 +84,8 @@ def load_data():
             "cost": 95*6,
             "currency":"CHF",
             "link": "https://www.randa.ch/en/tourism/mountain-huts/europa-hut/",
-            "notes": "Check trail conditions (Europaweg closures)."
+            "notes": "Check trail conditions (Europaweg closures).",
+            "gpx_file": "gpx_files/day4.gpx"
         },
         {
             "day": 6,
@@ -96,7 +101,8 @@ def load_data():
             "cost": 389.47,
             "currency":"EUR",
             "link": "https://www.airbnb.com/l/HboTDHw1?s=67&unique_share_id=2f3f5ee4-8917-4285-b4ef-23e3d0be60aa",
-            "notes": ""
+            "notes": "",
+            "gpx_file": "gpx_files/day5.gpx"
         },
         {
             "day": 7,
@@ -112,7 +118,8 @@ def load_data():
             "cost": 103*6,
             "currency":"CHF",
             "link": "https://www.gandegg.ch/mountain-hut.html",
-            "notes": ""
+            "notes": "",
+            "gpx_file": "gpx_files/day6.gpx"
         },
         {
             "day": 8,
@@ -128,7 +135,8 @@ def load_data():
             "cost": 386,
             "currency":"CHF",
             "link": "https://secure.booking.com/confirmation.el.html?label=gen173nr-10CAEoggI46AdIM1gEaFyIAQGYATO4ARfIAQzYAQPoAQH4AQGIAgGoAgG4Asvv780GwAIB0gIkNWU3YzY5ZTEtMDhhOS00YTI5LWJkOTgtYjgyMWI5NGE0YTY32AIB4AIB&sid=8df3b9f6feab32d1b4c2fb0b72d0d9d8&aid=304142&auth_key=sCWtTpcmfowGwl81&source=mytrips",
-            "notes": ""
+            "notes": "",
+            "gpx_file": None
         },
         {
             "day": 9,
@@ -143,7 +151,8 @@ def load_data():
             "stay": "-",
             "cost": 0,
             "link": None,
-            "notes": "Return"
+            "notes": "Return",
+            "gpx_file": None
         }
     ])
 
