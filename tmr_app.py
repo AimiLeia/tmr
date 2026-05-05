@@ -85,26 +85,7 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# =========================
-# 🔗 FLIGHTS
-# =========================
-with st.expander("✈️ Flights"):
-    st.subheader("✈️ Flight Details")
 
-    for f in flights:
-        st.markdown(f"""
-        <div style="
-            border:1px solid #ddd;
-            border-radius:12px;
-            padding:15px;
-            margin-bottom:10px;
-            background-color:#f9f9f9;
-        ">
-            <h4>✈️ {f['type']} — {f['from']} → {f['to']}</h4>
-            <p><b>Date:</b> {f['date']} &nbsp;&nbsp; <b>Time:</b> {f['time']}</p>
-            <p><b>Flight:</b> {f['flight']}</p>
-        </div>
-        """, unsafe_allow_html=True)
 # =========================
 # 🔗 LINKS
 # =========================
@@ -278,7 +259,22 @@ with tab2:
     st.title("🚆 Transport")
 
     with st.expander("✈️ Flights"):
-        st.write("Add details")
+        st.subheader("✈️ Flight Details")
+
+        for f in flights:
+            st.markdown(f"""
+            <div style="
+                border:1px solid #ddd;
+                border-radius:12px;
+                padding:15px;
+                margin-bottom:10px;
+                background-color:#f9f9f9;
+            ">
+                <h4>✈️ {f['type']} — {f['from']} → {f['to']}</h4>
+                <p><b>Date:</b> {f['date']} &nbsp;&nbsp; <b>Time:</b> {f['time']}</p>
+                <p><b>Flight:</b> {f['flight']}</p>
+            </div>
+            """, unsafe_allow_html=True)
 
     with st.expander("🚆 Train"):
         st.write("Milano → Domodossola")
