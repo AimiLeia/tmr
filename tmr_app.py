@@ -223,6 +223,39 @@ with tab1:
         ✈️ Flight {return_flight['flight']}
         """)
     # =========================
+    # 🗺️ MAP
+    # =========================
+    st.markdown("---")
+    st.subheader("🗺️ Route Map")
+
+    gpx_path = get_gpx_file_for_day(day)
+
+    if os.path.exists(gpx_path):
+        with open(gpx_path, "r", encoding="utf-8") as f:
+            gpx = gpxpy.parse(f)
+
+        points = [
+            (p.latitude, p.longitude)
+            for track in gpx.tracks
+            for segment in track.segments
+            for p in segment.points
+        ]
+
+        if points:
+            m = folium.Map()
+            folium.PolyLine(points, color="blue", weight=4).add_to(m)
+            m.fit_bounds(points)
+
+            folium.Marker(points[0], tooltip="Start").add_to(m)
+            folium.Marker(points[-1], tooltip="End").add_to(m)
+
+            st.components.v1.html(m._repr_html_(), height=400)
+        else:
+            st.warning("GPX file has no points.")
+
+    else:
+        st.info(f"No GPX file found: {gpx_path}")
+    # =========================
     # 📊 SUMMARY
     # =========================
     st.markdown("---")
@@ -256,39 +289,7 @@ with tab1:
 
     st.altair_chart(chart, use_container_width=True)
 
-    # =========================
-    # 🗺️ MAP
-    # =========================
-    st.markdown("---")
-    st.subheader("🗺️ Route Map")
-
-    gpx_path = get_gpx_file_for_day(day)
-
-    if os.path.exists(gpx_path):
-        with open(gpx_path, "r", encoding="utf-8") as f:
-            gpx = gpxpy.parse(f)
-
-        points = [
-            (p.latitude, p.longitude)
-            for track in gpx.tracks
-            for segment in track.segments
-            for p in segment.points
-        ]
-
-        if points:
-            m = folium.Map()
-            folium.PolyLine(points, color="blue", weight=4).add_to(m)
-            m.fit_bounds(points)
-
-            folium.Marker(points[0], tooltip="Start").add_to(m)
-            folium.Marker(points[-1], tooltip="End").add_to(m)
-
-            st.components.v1.html(m._repr_html_(), height=400)
-        else:
-            st.warning("GPX file has no points.")
-
-    else:
-        st.info(f"No GPX file found: {gpx_path}")
+    
 
 # =========================
 # 🚆 TAB 2
