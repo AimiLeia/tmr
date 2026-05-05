@@ -124,21 +124,41 @@ tab1, tab2 = st.tabs(["🏔️ Daily Plan", "🚆 Transport Info"])
 # =========================
 # 🏔️ TAB 1
 # =========================
-col_prev, _, col_next = st.columns([1,2,1])
+# col_prev, _, col_next = st.columns([1,2,1])
 
-with col_prev:
-    if st.button("⬅️ Previous", use_container_width=True):
-        if st.session_state.day > df["day"].min():
-            st.session_state.day -= 1
+# with col_prev:
+#     if st.button("⬅️ Previous", use_container_width=True):
+#         if st.session_state.day > df["day"].min():
+#             st.session_state.day -= 1
 
-with col_next:
-    if st.button("Next ➡️", use_container_width=True):
-        if st.session_state.day < df["day"].max():
-            st.session_state.day += 1
+# with col_next:
+#     if st.button("Next ➡️", use_container_width=True):
+#         if st.session_state.day < df["day"].max():
+#             st.session_state.day += 1
 
 day = st.session_state.day
 
 with tab1:
+    # 🔼 NAVIGATION BUTTONS AT TOP
+    col_prev, _, col_next = st.columns([1,2,1])
+
+    with col_prev:
+        if st.button("⬅️ Previous", use_container_width=True):
+            if st.session_state.day > df["day"].min():
+                st.session_state.day -= 1
+                st.rerun()
+
+    with col_next:
+        if st.button("Next ➡️", use_container_width=True):
+            if st.session_state.day < df["day"].max():
+                st.session_state.day += 1
+                st.rerun()
+    st.markdown("""
+    <script>
+    window.scrollTo(0, 0);
+    </script>
+    """, unsafe_allow_html=True)
+    
     row = df[df["day"] == day].iloc[0]
 
     st.title(f"Day {row['day']}: {row['from']} → {row['to']}")
