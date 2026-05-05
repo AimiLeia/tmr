@@ -6,6 +6,18 @@ import gpxpy
 from data import load_data, load_flights
 import base64
 import os
+import requests
+
+# Get CHF-EUR
+@st.cache_data(ttl=3600)
+def get_chf_to_eur():
+    try:
+        url = "https://api.exchangerate.host/latest?base=CHF&symbols=EUR"
+        response = requests.get(url, timeout=5)
+        data = response.json()
+        return data["rates"]["EUR"]
+    except:
+        return 1.04  # fallback
 
 # =========================
 # 🔧 CONFIG
@@ -106,6 +118,12 @@ st.session_state.day = day
 
 progress = day / df["day"].max()
 st.sidebar.progress(progress)
+
+# 💱 Exchange rate
+st.sidebar.markdown(f"💱 CHF → EUR: {CHF_TO_EUR:.2f}")
+
+st.sidebar.markdown("---")
+st.sidebar.markdown("### 🗺️ Route")
 
 st.sidebar.markdown("---")
 st.sidebar.markdown("### 🗺️ Route")
