@@ -157,3 +157,23 @@ def load_data():
     ])
 
     return df
+
+def load_flights():
+    return [
+        {
+            "type": "Departure",
+            "from": "Athens",
+            "to": "Milan",
+            "date": "2026-07-16",
+            "time": "07:40",
+            "flight": "A3 660"
+        },
+        {
+            "type": "Return",
+            "from": "Milan",
+            "to": "Athens",
+            "date": "2026-07-24",
+            "time": "19:25",
+            "flight": "A3 665"
+        }
+    ]

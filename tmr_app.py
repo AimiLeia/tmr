@@ -3,7 +3,7 @@ import pandas as pd
 import altair as alt
 import folium
 import gpxpy
-from data import load_data
+from data import load_data, load_flights
 import base64
 import os
 
@@ -44,6 +44,7 @@ def get_gpx_file_for_day(day):
 # 📊 DATA
 # =========================
 df = load_data()
+flights = load_flights()
 
 if "day" not in st.session_state:
     st.session_state.day = int(df["day"].min())
@@ -84,6 +85,26 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
+# =========================
+# 🔗 FLIGHTS
+# =========================
+with st.expander("✈️ Flights"):
+    st.subheader("✈️ Flight Details")
+
+    for f in flights:
+        st.markdown(f"""
+        <div style="
+            border:1px solid #ddd;
+            border-radius:12px;
+            padding:15px;
+            margin-bottom:10px;
+            background-color:#f9f9f9;
+        ">
+            <h4>✈️ {f['type']} — {f['from']} → {f['to']}</h4>
+            <p><b>Date:</b> {f['date']} &nbsp;&nbsp; <b>Time:</b> {f['time']}</p>
+            <p><b>Flight:</b> {f['flight']}</p>
+        </div>
+        """, unsafe_allow_html=True)
 # =========================
 # 🔗 LINKS
 # =========================
@@ -162,6 +183,26 @@ with tab1:
         st.subheader("⚠️ Notes")
         st.markdown(row["notes"])
 
+    if row["day"] == 1:
+        st.subheader("✈️ Flight to Milan")
+
+        departure = flights[0]
+
+        st.info(f"""
+        {departure['from']} → {departure['to']}  
+        🕒 {departure['date']} at {departure['time']}  
+        ✈️ Flight {departure['flight']}
+        """)
+    if row["day"] == df["day"].max():
+        st.subheader("✈️ Return Flight")
+
+        return_flight = flights[1]
+
+        st.info(f"""
+        {return_flight['from']} → {return_flight['to']}  
+        🕒 {return_flight['date']} at {return_flight['time']}  
+        ✈️ Flight {return_flight['flight']}
+        """)
     # =========================
     # 📊 SUMMARY
     # =========================
