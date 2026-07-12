@@ -164,13 +164,13 @@ with tab1:
         if st.button("⬅️ Previous", use_container_width=True):
             if st.session_state.day > df["day"].min():
                 st.session_state.day -= 1
-                st.rerun()
+                st.experimental_rerun ()
 
     with col_next:
         if st.button("Next ➡️", use_container_width=True):
             if st.session_state.day < df["day"].max():
                 st.session_state.day += 1
-                st.rerun()
+                st.experimental_rerun ()
     st.markdown("""
     <script>
     window.scrollTo(0, 0);
